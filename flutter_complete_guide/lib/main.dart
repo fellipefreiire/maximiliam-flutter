@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/answer.dart';
 import 'package:flutter_complete_guide/question.dart';
+import 'package:flutter_complete_guide/quiz.dart';
+import 'package:flutter_complete_guide/result.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +16,41 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _questionIndex = 0;
 
-  void answerQuestion() {
+  final List<Map<String, Object>> _questions = [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': [
+        'Black',
+        'Red',
+        'Green',
+        'White',
+      ],
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': [
+        'Rabbit',
+        'Snake',
+        'Elephant',
+        'Lion',
+      ],
+    },
+    {
+      'questionText': 'Who\'s your favorite instructor?',
+      'answers': [
+        'Max',
+        'Max',
+        'Max',
+        'Max',
+      ],
+    },
+  ];
+
+  void _answerQuestion() {
+    if (_questionIndex < _questions.length) {
+      print('We have more questions');
+    }
+
     setState(() {
       _questionIndex++;
     });
@@ -22,37 +59,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> questions = [
-      'What\'s your favorite color?',
-      'What\'s your favorite animal?',
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('My first app'),
         ),
-        body: Column(
-          children: <Widget>[
-            Question(questionText: questions[_questionIndex]),
-            ElevatedButton(
-              onPressed: answerQuestion,
-              child: Text('Answer 1'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                print('Answer 2');
-              },
-              child: Text('Answer 2'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                print('Answer 2');
-              },
-              child: Text('Answer 3'),
-            ),
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(),
       ),
     );
   }
