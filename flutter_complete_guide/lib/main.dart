@@ -15,41 +15,44 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _questionIndex = 0;
+  int _totalScore = 0;
 
   final List<Map<String, Object>> _questions = [
     {
       'questionText': 'What\'s your favorite color?',
       'answers': [
-        'Black',
-        'Red',
-        'Green',
-        'White',
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 3},
+        {'text': 'White', 'score': 1},
       ],
     },
     {
       'questionText': 'What\'s your favorite animal?',
       'answers': [
-        'Rabbit',
-        'Snake',
-        'Elephant',
-        'Lion',
+        {'text': 'Rabbit', 'score': 3},
+        {'text': 'Snake', 'score': 11},
+        {'text': 'Elephant', 'score': 5},
+        {'text': 'Lion', 'score': 9},
       ],
     },
     {
       'questionText': 'Who\'s your favorite instructor?',
       'answers': [
-        'Max',
-        'Max',
-        'Max',
-        'Max',
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
       ],
     },
   ];
 
-  void _answerQuestion() {
+  void _answerQuestion(int score) {
     if (_questionIndex < _questions.length) {
       print('We have more questions');
     }
+
+    _totalScore += score;
 
     setState(() {
       _questionIndex++;
@@ -57,12 +60,19 @@ class _MyAppState extends State<MyApp> {
     print(_questionIndex);
   }
 
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('My first app'),
+          title: const Text('My first app'),
         ),
         body: _questionIndex < _questions.length
             ? Quiz(
@@ -70,7 +80,10 @@ class _MyAppState extends State<MyApp> {
                 questionIndex: _questionIndex,
                 questions: _questions,
               )
-            : Result(),
+            : Result(
+                resultScore: _totalScore,
+                resetHandler: _resetQuiz,
+              ),
       ),
     );
   }
