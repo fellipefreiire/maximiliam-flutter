@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'adaptive_text_button.dart';
 
 class NewTransaction extends StatefulWidget {
   const NewTransaction({Key? key, required this.addTx}) : super(key: key);
@@ -54,56 +59,58 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Title',
+    return SingleChildScrollView(
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                ),
+                onSubmitted: (_) => _submitData(),
+                controller: _titleController,
               ),
-              onSubmitted: (_) => _submitData(),
-              controller: _titleController,
-            ),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Amount',
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                ),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                controller: _amountController,
+                onSubmitted: (_) => _submitData(),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              controller: _amountController,
-              onSubmitted: (_) => _submitData(),
-            ),
-            SizedBox(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _selectedDate == null
-                          ? 'No Date Chosen!'
-                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate as DateTime)}',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _presentDatePicker,
-                    child: const Text(
-                      'Choose Date',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+              SizedBox(
+                height: 70,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _selectedDate == null
+                            ? 'No Date Chosen!'
+                            : 'Picked Date: ${DateFormat.yMd().format(_selectedDate as DateTime)}',
                       ),
                     ),
-                  )
-                ],
+                    AdaptiveButton(
+                      text: 'Choose Date',
+                      handler: _presentDatePicker,
+                    )
+                  ],
+                ),
               ),
-            ),
-            ElevatedButton(
-              child: const Text('Add Transaction'),
-              onPressed: _submitData,
-            )
-          ],
+              ElevatedButton(
+                child: const Text('Add Transaction'),
+                onPressed: _submitData,
+              )
+            ],
+          ),
         ),
       ),
     );
